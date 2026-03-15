@@ -147,19 +147,55 @@ function renderRecipePage() {
 
   // Content
   const contentEl = document.getElementById('recipeContent');
-  if (contentEl && recipe.ingredients && recipe.steps) {
-    contentEl.innerHTML = `
-    <div class="recipe-content" itemprop="recipeInstructions">
-      <div class="recipe-ingredients">
-        <h2>🧂 מצרכים</h2>
-        <ul>${recipe.ingredients.map(i => `<li itemprop="recipeIngredient">${i}</li>`).join('')}</ul>
-      </div>
-      <div class="recipe-steps">
-        <h2>👨‍🍳 אופן ההכנה</h2>
-        <ol>${recipe.steps.map(s => `<li>${s}</li>`).join('')}</ol>
-      </div>
-      ${recipe.tags?.length ? `<div style="margin-top:1.5rem">${recipe.tags.map(t => `<span class="tag-pill active">${t}</span>`).join('')}</div>` : ''}
-    </div>`;
+  if (contentEl) {
+    let contentHTML = '';
+
+    // If we have structured ingredients/steps, show them nicely
+    const hasStructured = recipe.ingredients && recipe.ingredients.length > 0 && recipe.steps && recipe.steps.length > 0;
+
+    if (hasStructured) {
+      const ingHTML = recipe.ingredients.map(i => {
+        if (i.startsWith('---') && i.endsWith('---')) {
+          return `<li class="ing-section">${i.replace(/---/g,'').trim()}</li>`;
+        }
+        return `<li itemprop="recipeIngredient">${i}</li>`;
+      }).join('');
+
+      const stepsHTML = recipe.steps.map(s => `<li>${s}</li>`).join('');
+
+      contentHTML = `
+        <div class="recipe-ingredients">
+          <h2>🧂 מצרכים</h2>
+          <ul>${ingHTML}</ul>
+        </div>
+        <div class="recipe-steps">
+          <h2>👨‍🍳 אופן ההכנה</h2>
+          <ol>${stepsHTML}</ol>
+        </div>`;
+
+    } else if (recipe.body_html) {
+      // Show full sanitized HTML body (original post content)
+      contentHTML = `<div class="recipe-body-full" itemprop="recipeInstructions">${recipe.body_html}</div>`;
+
+    } else if (recipe.ingredients && recipe.ingredients.length > 0) {
+      // Only ingredients, no steps
+      const ingHTML = recipe.ingredients.map(i => {
+        if (i.startsWith('---') && i.endsWith('---')) {
+          return `<li class="ing-section">${i.replace(/---/g,'').trim()}</li>`;
+        }
+        return `<li itemprop="recipeIngredient">${i}</li>`;
+      }).join('');
+      contentHTML = `<div class="recipe-ingredients"><h2>🧂 מצרכים</h2><ul>${ingHTML}</ul></div>`;
+      if (recipe.body_html) {
+        contentHTML += `<div class="recipe-body-full">${recipe.body_html}</div>`;
+      }
+    }
+
+    const tagsHTML = recipe.tags?.length
+      ? `<div class="recipe-tags">${recipe.tags.map(t => `<span class="tag-pill">${t}</span>`).join('')}</div>`
+      : '';
+
+    contentEl.innerHTML = `<div class="recipe-content" itemscope itemtype="https://schema.org/Recipe">${contentHTML}${tagsHTML}</div>`;
   }
 }
 

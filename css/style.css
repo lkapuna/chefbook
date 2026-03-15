@@ -848,6 +848,54 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.5rem); }
 }
 
 /* ===========================
+   FULL BODY HTML (from WP)
+   =========================== */
+.recipe-body-full {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--gray-200);
+  font-size: 0.975rem;
+  line-height: 1.8;
+  color: var(--gray-700, #444);
+}
+.recipe-body-full h2 {
+  font-size: 1.2rem;
+  color: var(--black);
+  margin: 1.5rem 0 0.5rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid var(--red);
+}
+.recipe-body-full h2:first-child { margin-top: 0; }
+.recipe-body-full p { margin-bottom: 0.75rem; }
+.recipe-body-full strong { font-weight: 700; color: var(--black); }
+.recipe-body-full ul, .recipe-body-full ol {
+  padding-right: 1.5rem;
+  margin-bottom: 1rem;
+}
+.recipe-body-full ul { list-style: disc; }
+.recipe-body-full ol { list-style: decimal; }
+.recipe-body-full li { margin-bottom: 0.3rem; }
+
+.recipe-ingredients ul li.ing-section {
+  list-style: none;
+  font-weight: 700;
+  color: var(--red);
+  margin-top: 0.75rem;
+  margin-bottom: 0.25rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.recipe-tags {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--gray-200);
+}
+
+/* ===========================
    PRINT / ACCESSIBILITY
    =========================== */
 @media print {
