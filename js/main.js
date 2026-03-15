@@ -174,8 +174,21 @@ function renderRecipePage() {
         </div>`;
 
     } else if (recipe.body_html) {
-      // Show full sanitized HTML body (original post content)
-      contentHTML = `<div class="recipe-body-full" itemprop="recipeInstructions">${recipe.body_html}</div>`;
+      // Strip duplicate intro: remove opening h2 (title) and first paragraph (excerpt)
+      let cleanBody = recipe.body_html;
+      // Remove first h2 tag (repeats the title)
+      cleanBody = cleanBody.replace(/^\s*<h2[^>]*>[\s\S]*?<\/h2>\s*/i, '');
+      // Remove first 1-2 <p> blocks if they repeat the excerpt
+      const excerptSnip = (recipe.excerpt || '').trim().slice(0, 40).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+      if (excerptSnip) {
+        cleanBody = cleanBody.replace(new RegExp('<p[^>]*>[^<]*' + excerptSnip + '[\\s\\S]*?<\/p>\\s*', 'i'), '');
+      }
+      // Remove any remaining short leading <p> that just restates the title/excerpt
+      cleanBody = cleanBody.replace(/^(\s*<p[^>]*>[^<]{0,150}<\/p>\s*){0,2}/, '');
+      cleanBody = cleanBody.trim();
+      if (cleanBody) {
+        contentHTML = `<div class="recipe-body-full" itemprop="recipeInstructions">${cleanBody}</div>`;
+      }
 
     } else if (recipe.ingredients && recipe.ingredients.length > 0) {
       // Only ingredients, no steps
@@ -186,16 +199,20 @@ function renderRecipePage() {
         return `<li itemprop="recipeIngredient">${i}</li>`;
       }).join('');
       contentHTML = `<div class="recipe-ingredients"><h2>🧂 מצרכים</h2><ul>${ingHTML}</ul></div>`;
-      if (recipe.body_html) {
-        contentHTML += `<div class="recipe-body-full">${recipe.body_html}</div>`;
-      }
     }
 
     const tagsHTML = recipe.tags?.length
       ? `<div class="recipe-tags">${recipe.tags.map(t => `<span class="tag-pill">${t}</span>`).join('')}</div>`
       : '';
 
-    contentEl.innerHTML = `<div class="recipe-content" itemscope itemtype="https://schema.org/Recipe">${contentHTML}${tagsHTML}</div>`;
+    const videoHTML = buildVideoEmbed(recipe);
+
+    contentEl.innerHTML = `<div class="recipe-content" itemscope itemtype="https://schema.org/Recipe">${contentHTML}${videoHTML}${tagsHTML}</div>`;
+
+    // Load embed scripts after DOM is ready
+    if (recipe.videoUrl) {
+      setTimeout(() => loadVideoScripts(recipe), 100);
+    }
   }
 }
 
@@ -259,3 +276,79 @@ const page = location.pathname.split('/').pop();
 if (page === 'recipe.html') renderRecipePage();
 if (page === 'category.html') renderCategoryPage();
 if (page === 'search.html') renderSearchPage();
+
+// ---- VIDEO EMBED ----
+function buildVideoEmbed(recipe) {
+  if (!recipe.videoUrl) return '';
+
+  if (recipe.videoType === 'instagram') {
+    // Extract shortcode from URL
+    const match = recipe.videoUrl.match(/\/reel\/([A-Za-z0-9_-]+)/);
+    if (!match) return '';
+    const shortcode = match[1];
+    return `
+      <div class="recipe-video-wrap">
+        <h2 class="recipe-video-title">🎬 סרטון הכנה</h2>
+        <div class="ig-embed-container">
+          <blockquote
+            class="instagram-media"
+            data-instgrm-captioned
+            data-instgrm-permalink="https://www.instagram.com/reel/${shortcode}/?utm_source=ig_embed"
+            data-instgrm-version="14"
+            style="max-width:540px;width:100%;margin:0 auto;">
+          </blockquote>
+        </div>
+        <a class="video-fallback-link" href="${recipe.videoUrl}" target="_blank" rel="noopener">
+          📱 צפה ב-Reel באינסטגרם ←
+        </a>
+      </div>`;
+  }
+
+  if (recipe.videoType === 'tiktok') {
+    const vidMatch = recipe.videoUrl.match(/video\/(\d+)/);
+    if (!vidMatch) return '';
+    const vidId = vidMatch[1];
+    return `
+      <div class="recipe-video-wrap">
+        <h2 class="recipe-video-title">🎬 סרטון הכנה</h2>
+        <div class="tiktok-embed-container">
+          <blockquote
+            class="tiktok-embed"
+            cite="${recipe.videoUrl}"
+            data-video-id="${vidId}"
+            style="max-width:605px;min-width:325px;margin:0 auto;">
+            <section></section>
+          </blockquote>
+        </div>
+        <a class="video-fallback-link" href="${recipe.videoUrl}" target="_blank" rel="noopener">
+          🎵 צפה ב-TikTok ←
+        </a>
+      </div>`;
+  }
+  return '';
+}
+
+function loadVideoScripts(recipe) {
+  if (!recipe.videoUrl) return;
+
+  if (recipe.videoType === 'instagram') {
+    // Load IG embed script if not already loaded
+    if (!document.querySelector('script[src*="instagram.com/embed"]')) {
+      const s = document.createElement('script');
+      s.src = 'https://www.instagram.com/embed.js';
+      s.async = true;
+      document.body.appendChild(s);
+    } else if (window.instgrm) {
+      window.instgrm.Embeds.process();
+    }
+  }
+
+  if (recipe.videoType === 'tiktok') {
+    if (!document.querySelector('script[src*="tiktok.com/embed"]')) {
+      const s = document.createElement('script');
+      s.src = 'https://www.tiktok.com/embed.js';
+      s.async = true;
+      document.body.appendChild(s);
+    }
+  }
+}
