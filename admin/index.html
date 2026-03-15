@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin – שף בוק</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;700;900&family=Assistant:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .img-preview { max-width: 200px; border-radius: 8px; margin-top: 0.5rem; display: none; }
+    .ing-list, .step-list { list-style: none; padding: 0; }
+    .ing-list li, .step-list li {
+      display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.4rem;
+    }
+    .ing-list li input, .step-list li input {
+      flex: 1; border: 1px solid var(--gray-200); border-radius: var(--radius);
+      padding: 0.45rem 0.7rem; font-size: 0.9rem; direction: rtl;
+    }
+    .remove-btn {
+      background: none; border: none; color: var(--red); cursor: pointer; font-size: 1.1rem;
+      padding: 0.2rem 0.4rem;
+    }
+    .tab-bar { display: flex; gap: 0; border-bottom: 2px solid var(--gray-200); margin-bottom: 1.5rem; }
+    .tab-btn {
+      padding: 0.75rem 1.25rem; background: none; border: none; cursor: pointer;
+      font-family: var(--font-body); font-size: 0.95rem; color: var(--gray-600);
+      border-bottom: 2px solid transparent; margin-bottom: -2px; font-weight: 600;
+    }
+    .tab-btn.active { color: var(--red); border-bottom-color: var(--red); }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+    .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+    .stat-card { background: var(--white); border-radius: var(--radius-lg); padding: 1.25rem; text-align: center; box-shadow: var(--shadow); }
+    .stat-card .num { font-size: 2rem; font-weight: 900; color: var(--red); font-family: var(--font-display); }
+    .stat-card .label { font-size: 0.8rem; color: var(--gray-600); margin-top: 0.25rem; }
+  </style>
+</head>
+<body>
+
+<!-- Simple password gate -->
+<div id="loginGate" style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--black)">
+  <div style="background:var(--gray-800);padding:2.5rem;border-radius:var(--radius-lg);text-align:center;min-width:300px">
+    <div style="font-size:1.5rem;color:var(--white);margin-bottom:1.5rem">
+      <span style="color:var(--white);font-family:var(--font-display);font-weight:900">Chef</span><span style="color:var(--red);font-family:var(--font-display);font-weight:900">Book</span>
+      <div style="font-size:0.85rem;color:var(--gray-400);margin-top:0.3rem">Admin Panel</div>
+    </div>
+    <input type="password" id="adminPass" placeholder="סיסמת Admin" style="width:100%;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius);padding:0.75rem;color:var(--white);font-size:1rem;direction:rtl;margin-bottom:1rem">
+    <button onclick="adminLogin()" class="btn-primary" style="width:100%">כניסה</button>
+    <p id="loginError" style="color:var(--red);font-size:0.85rem;margin-top:0.75rem;display:none">סיסמה שגויה</p>
+  </div>
+</div>
+
+<div id="adminApp" style="display:none">
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="logo-wrap">
+      <span class="logo-chef" style="font-size:1.1rem">Chef</span><span class="logo-book" style="font-size:1.1rem">Book</span>
+      <div style="font-size:0.7rem;color:var(--gray-400);margin-top:0.2rem">Admin Panel</div>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="#" onclick="showTab('dashboard')" class="active" id="nav-dashboard">📊 דשבורד</a></li>
+        <li><a href="#" onclick="showTab('add')" id="nav-add">➕ הוסף מתכון</a></li>
+        <li><a href="#" onclick="showTab('list')" id="nav-list">📋 רשימת מתכונים</a></li>
+        <li><a href="#" onclick="showTab('newsletter')" id="nav-newsletter">📧 ניוזלטר</a></li>
+        <li><a href="../index.html" target="_blank" style="border-top:1px solid rgba(255,255,255,0.1);margin-top:1rem">🌐 צפה באתר</a></li>
+        <li><a href="#" onclick="adminLogout()">🚪 יציאה</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <main class="admin-main">
+    <!-- DASHBOARD -->
+    <div class="tab-pane active" id="tab-dashboard">
+      <h1>📊 דשבורד</h1>
+      <div class="stat-grid" id="statsGrid"></div>
+      <div class="admin-card">
+        <h2>מתכונים אחרונים</h2>
+        <table class="admin-table" id="recentTable">
+          <thead><tr><th>כותרת</th><th>קטגוריה</th><th>תאריך</th><th>פעולות</th></tr></thead>
+          <tbody id="recentBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ADD RECIPE -->
+    <div class="tab-pane" id="tab-add">
+      <h1 id="formTitle">➕ הוסף מתכון חדש</h1>
+      <div class="admin-card">
+        <input type="hidden" id="editId">
+        <div class="form-group">
+          <label>כותרת המתכון *</label>
+          <input type="text" id="fTitle" placeholder="למשל: עוגת שוקולד רכה ועסיסית">
+        </div>
+        <div class="form-group">
+          <label>תיאור קצר *</label>
+          <textarea id="fExcerpt" rows="2" placeholder="תיאור קצר שיופיע בכרטיסיית המתכון"></textarea>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+          <div class="form-group">
+            <label>קטגוריה *</label>
+            <select id="fCat">
+              <option value="">-- בחר קטגוריה --</option>
+              <option value="kinuchim">קינוחים</option>
+              <option value="maafim">מאפים</option>
+              <option value="basari">בשרי</option>
+              <option value="dagim">דגים</option>
+              <option value="pastot">פסטות</option>
+              <option value="tzimchoni">צמחוני</option>
+              <option value="chalavi">חלבי</option>
+              <option value="tosafot">תוספות</option>
+              <option value="misadot">מסעדות</option>
+              <option value="tipim">טיפים</option>
+              <option value="mutzarim">מוצרים</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>רמת קושי</label>
+            <select id="fDiff">
+              <option value="קל">קל</option>
+              <option value="בינוני">בינוני</option>
+              <option value="מתקדם">מתקדם</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>זמן הכנה</label>
+            <input type="text" id="fPrep" placeholder="15 דקות">
+          </div>
+          <div class="form-group">
+            <label>זמן בישול</label>
+            <input type="text" id="fCook" placeholder="30 דקות">
+          </div>
+          <div class="form-group">
+            <label>מנות</label>
+            <input type="text" id="fServ" placeholder="4 מנות">
+          </div>
+          <div class="form-group">
+            <label>תגיות (פסיק ביניהן)</label>
+            <input type="text" id="fTags" placeholder="שוקולד, קינוח, מהיר">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>קישור לתמונה</label>
+          <input type="url" id="fImg" placeholder="https://..." oninput="previewImg()">
+          <img id="imgPreview" class="img-preview" alt="תצוגה מקדימה">
+        </div>
+        <div class="form-group">
+          <label>מצרכים</label>
+          <ul class="ing-list" id="ingList"></ul>
+          <button type="button" class="btn-outline" onclick="addIng()" style="margin-top:0.5rem;padding:0.4rem 1rem;font-size:0.85rem">+ הוסף מצרך</button>
+        </div>
+        <div class="form-group">
+          <label>שלבי הכנה</label>
+          <ul class="step-list" id="stepList"></ul>
+          <button type="button" class="btn-outline" onclick="addStep()" style="margin-top:0.5rem;padding:0.4rem 1rem;font-size:0.85rem">+ הוסף שלב</button>
+        </div>
+        <div style="display:flex;gap:0.75rem;margin-top:1rem">
+          <button class="btn-primary" onclick="saveRecipe()">💾 שמור מתכון</button>
+          <button class="btn-outline" onclick="resetForm()">ניקוי טופס</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECIPE LIST -->
+    <div class="tab-pane" id="tab-list">
+      <h1>📋 כל המתכונים</h1>
+      <div class="admin-card" style="padding:0.5rem">
+        <table class="admin-table">
+          <thead><tr><th>כותרת</th><th>קטגוריה</th><th>תאריך</th><th>פעולות</th></tr></thead>
+          <tbody id="allRecipesBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- NEWSLETTER -->
+    <div class="tab-pane" id="tab-newsletter">
+      <h1>📧 ניוזלטר ומנויים</h1>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="num" id="subCount">0</div>
+          <div class="label">מנויים רשומים</div>
+        </div>
+      </div>
+      <div class="admin-card">
+        <h2>רשימת מנויים</h2>
+        <p style="color:var(--gray-600);font-size:0.875rem;margin-bottom:1rem">
+          💡 לשליחת ניוזלטרים, מומלץ להשתמש ב-<strong>Brevo (לשעבר Sendinblue)</strong> – חינמי עד 300 מיילים ליום.
+          <a href="https://brevo.com" target="_blank" style="color:var(--red)">brevo.com</a>
+        </p>
+        <button class="btn-outline" onclick="exportCSV()" style="margin-bottom:1rem">📥 ייצוא CSV</button>
+        <table class="admin-table">
+          <thead><tr><th>שם</th><th>אימייל</th><th>תאריך הצטרפות</th></tr></thead>
+          <tbody id="subsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+</div>
+
+<script src="../js/data.js"></script>
+<script>
+// ---- AUTH (simple local password) ----
+const ADMIN_PASS = localStorage.getItem('cb_admin_pass') || 'chefbook2025';
+
+function adminLogin() {
+  const pass = document.getElementById('adminPass').value;
+  if (pass === ADMIN_PASS) {
+    sessionStorage.setItem('cb_auth', '1');
+    document.getElementById('loginGate').style.display = 'none';
+    document.getElementById('adminApp').style.display = 'block';
+    initAdmin();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+  }
+}
+
+function adminLogout() {
+  sessionStorage.removeItem('cb_auth');
+  location.reload();
+}
+
+document.getElementById('adminPass').addEventListener('keydown', e => {
+  if (e.key === 'Enter') adminLogin();
+});
+
+if (sessionStorage.getItem('cb_auth') === '1') {
+  document.getElementById('loginGate').style.display = 'none';
+  document.getElementById('adminApp').style.display = 'block';
+  initAdmin();
+}
+
+// ---- TABS ----
+function showTab(name) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.admin-sidebar nav a').forEach(a => a.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  document.getElementById('nav-' + name)?.classList.add('active');
+  if (name === 'list') renderAllRecipes();
+  if (name === 'newsletter') renderNewsletter();
+  if (name === 'dashboard') renderDashboard();
+}
+
+// ---- INIT ----
+function initAdmin() {
+  renderDashboard();
+  addIng(); addIng(); addIng();
+  addStep(); addStep();
+}
+
+// ---- DASHBOARD ----
+function renderDashboard() {
+  const all = loadRecipes();
+  const subs = getSubscribers();
+  document.getElementById('statsGrid').innerHTML = `
+    <div class="stat-card"><div class="num">${all.length}</div><div class="label">סה"כ מתכונים</div></div>
+    <div class="stat-card"><div class="num">${subs.length}</div><div class="label">מנויי ניוזלטר</div></div>
+    <div class="stat-card"><div class="num">${Object.keys(CATEGORIES).length}</div><div class="label">קטגוריות</div></div>
+  `;
+  const tbody = document.getElementById('recentBody');
+  tbody.innerHTML = all.slice(0, 5).map(r => recipeRow(r)).join('');
+}
+
+function recipeRow(r) {
+  const cat = CATEGORIES[r.category];
+  return `<tr>
+    <td><a href="../recipe.html?slug=${r.slug}" target="_blank" style="color:var(--red)">${r.title}</a></td>
+    <td><span class="badge-cat">${cat?.label || r.category}</span></td>
+    <td>${r.date || ''}</td>
+    <td>
+      <button onclick="editRecipe('${r.id}')" style="background:none;border:none;cursor:pointer;color:var(--gray-600);font-size:0.9rem">✏️</button>
+      <button onclick="deleteRecipe('${r.id}')" style="background:none;border:none;cursor:pointer;color:var(--red);font-size:0.9rem">🗑️</button>
+    </td>
+  </tr>`;
+}
+
+// ---- RECIPE LIST ----
+function renderAllRecipes() {
+  document.getElementById('allRecipesBody').innerHTML = loadRecipes().map(r => recipeRow(r)).join('');
+}
+
+// ---- ADD/EDIT FORM ----
+function addIng(val = '') {
+  const li = document.createElement('li');
+  li.innerHTML = `<input type="text" placeholder="מצרך..." value="${val}"><button type="button" class="remove-btn" onclick="this.parentNode.remove()">✕</button>`;
+  document.getElementById('ingList').appendChild(li);
+}
+
+function addStep(val = '') {
+  const li = document.createElement('li');
+  li.innerHTML = `<input type="text" placeholder="שלב הכנה..." value="${val}"><button type="button" class="remove-btn" onclick="this.parentNode.remove()">✕</button>`;
+  document.getElementById('stepList').appendChild(li);
+}
+
+function previewImg() {
+  const url = document.getElementById('fImg').value;
+  const img = document.getElementById('imgPreview');
+  img.src = url;
+  img.style.display = url ? 'block' : 'none';
+}
+
+function getIngredients() {
+  return [...document.querySelectorAll('#ingList input')].map(i => i.value.trim()).filter(Boolean);
+}
+
+function getSteps() {
+  return [...document.querySelectorAll('#stepList input')].map(i => i.value.trim()).filter(Boolean);
+}
+
+function slugify(str) {
+  return str
+    .replace(/[\u0590-\u05FF\s]+/g, match => {
+      const map = { 'קאפקייקס': 'kapkeiks', 'שוקולד': 'shokolad', 'מתכון': 'mitkon' };
+      return map[match.trim()] || match.trim().replace(/\s+/g, '-');
+    })
+    .replace(/[^a-z0-9\u0590-\u05FF-]/g, '')
+    .replace(/-+/g, '-')
+    .toLowerCase()
+    || 'recipe-' + Date.now();
+}
+
+function saveRecipe() {
+  const title = document.getElementById('fTitle').value.trim();
+  const excerpt = document.getElementById('fExcerpt').value.trim();
+  const cat = document.getElementById('fCat').value;
+  if (!title || !excerpt || !cat) {
+    alert('יש למלא כותרת, תיאור וקטגוריה');
+    return;
+  }
+  const editId = document.getElementById('editId').value;
+
+  const recipe = {
+    id: editId || 'r' + Date.now(),
+    slug: editId ? (getRecipeBySlug(editId.slug)?.slug || 'r-' + Date.now()) : 'r-' + Date.now(),
+    title,
+    excerpt,
+    category: cat,
+    difficulty: document.getElementById('fDiff').value,
+    prepTime: document.getElementById('fPrep').value.trim(),
+    cookTime: document.getElementById('fCook').value.trim(),
+    servings: document.getElementById('fServ').value.trim(),
+    image: document.getElementById('fImg').value.trim(),
+    tags: document.getElementById('fTags').value.split(',').map(t => t.trim()).filter(Boolean),
+    ingredients: getIngredients(),
+    steps: getSteps(),
+    date: new Date().toISOString().split('T')[0],
+  };
+
+  // Build slug from title
+  recipe.slug = title
+    .replace(/[^א-ת\u0590-\u05FFa-z0-9\s]/gi, '')
+    .trim().replace(/\s+/g, '-')
+    .toLowerCase() || 'recipe-' + Date.now();
+
+  const saved = JSON.parse(localStorage.getItem('chefbook_recipes') || '[]');
+  const idx = saved.findIndex(r => r.id === recipe.id);
+  if (idx >= 0) saved[idx] = recipe;
+  else saved.unshift(recipe);
+  saveRecipes(saved);
+
+  alert(`✅ המתכון "${title}" נשמר!`);
+  resetForm();
+  showTab('list');
+}
+
+function resetForm() {
+  document.getElementById('editId').value = '';
+  document.getElementById('formTitle').textContent = '➕ הוסף מתכון חדש';
+  ['fTitle','fExcerpt','fPrep','fCook','fServ','fTags','fImg'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('fCat').value = '';
+  document.getElementById('fDiff').value = 'קל';
+  document.getElementById('ingList').innerHTML = '';
+  document.getElementById('stepList').innerHTML = '';
+  document.getElementById('imgPreview').style.display = 'none';
+  addIng(); addIng(); addIng();
+  addStep(); addStep();
+}
+
+function editRecipe(id) {
+  const r = loadRecipes().find(r => r.id === id);
+  if (!r) return;
+  showTab('add');
+  document.getElementById('formTitle').textContent = '✏️ עריכת מתכון';
+  document.getElementById('editId').value = r.id;
+  document.getElementById('fTitle').value = r.title;
+  document.getElementById('fExcerpt').value = r.excerpt;
+  document.getElementById('fCat').value = r.category;
+  document.getElementById('fDiff').value = r.difficulty || 'קל';
+  document.getElementById('fPrep').value = r.prepTime || '';
+  document.getElementById('fCook').value = r.cookTime || '';
+  document.getElementById('fServ').value = r.servings || '';
+  document.getElementById('fTags').value = (r.tags || []).join(', ');
+  document.getElementById('fImg').value = r.image || '';
+  document.getElementById('ingList').innerHTML = '';
+  document.getElementById('stepList').innerHTML = '';
+  (r.ingredients || []).forEach(i => addIng(i));
+  (r.steps || []).forEach(s => addStep(s));
+  previewImg();
+}
+
+function deleteRecipe(id) {
+  if (!confirm('למחוק מתכון זה?')) return;
+  const saved = JSON.parse(localStorage.getItem('chefbook_recipes') || '[]');
+  saveRecipes(saved.filter(r => r.id !== id));
+  renderAllRecipes();
+  renderDashboard();
+}
+
+// ---- NEWSLETTER ----
+function renderNewsletter() {
+  const subs = getSubscribers();
+  document.getElementById('subCount').textContent = subs.length;
+  document.getElementById('subsBody').innerHTML = subs.map(s => `
+    <tr>
+      <td>${s.name || '—'}</td>
+      <td>${s.email}</td>
+      <td>${new Date(s.date).toLocaleDateString('he-IL')}</td>
+    </tr>`).join('') || '<tr><td colspan="3" style="text-align:center;color:var(--gray-400)">אין מנויים עדיין</td></tr>';
+}
+
+function exportCSV() {
+  const subs = getSubscribers();
+  const csv = 'שם,אימייל,תאריך\n' + subs.map(s => `${s.name||''},${s.email},${s.date}`).join('\n');
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'chefbook-subscribers.csv';
+  a.click();
+}
+</script>
+</body>
+</html>

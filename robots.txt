@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /search.html
+
+Sitemap: https://www.chefbook.co.il/sitemap.xml

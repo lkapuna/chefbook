@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="robots" content="index, follow">
+  <title>מתכון – שף בוק</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;700;900&family=Assistant:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="application/ld+json" id="recipeSchema"></script>
+</head>
+<body itemscope itemtype="https://schema.org/Recipe">
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo-wrap">
+      <a href="index.html" class="logo-link">
+        <span class="logo-chef">Chef</span><span class="logo-book">Book</span>
+        <span class="logo-sub">שף בוק</span>
+      </a>
+    </div>
+    <button class="menu-toggle" id="menuToggle" aria-label="תפריט"><span></span><span></span><span></span></button>
+    <nav class="main-nav" id="mainNav">
+      <ul>
+        <li class="has-sub"><a href="category.html?cat=recipes">מתכונים ▾</a>
+          <ul class="submenu">
+            <li><a href="category.html?cat=kinuchim">קינוחים</a></li>
+            <li><a href="category.html?cat=maafim">מאפים</a></li>
+            <li><a href="category.html?cat=tzimchoni">צמחוני</a></li>
+            <li><a href="category.html?cat=chalavi">חלבי</a></li>
+            <li><a href="category.html?cat=pastot">פסטות</a></li>
+            <li><a href="category.html?cat=basari">בשרי</a></li>
+            <li><a href="category.html?cat=dagim">דגים</a></li>
+            <li><a href="category.html?cat=tosafot">תוספות</a></li>
+          </ul>
+        </li>
+        <li class="has-sub"><a href="category.html?cat=hamlaztot">המלצות ▾</a>
+          <ul class="submenu">
+            <li><a href="category.html?cat=misadot">מסעדות</a></li>
+            <li><a href="category.html?cat=tipim">טיפים</a></li>
+            <li><a href="category.html?cat=mutzarim">מוצרים</a></li>
+          </ul>
+        </li>
+        <li><a href="about.html">אודות</a></li>
+        <li><a href="contact.html">יצירת קשר</a></li>
+      </ul>
+    </nav>
+    <div class="header-search">
+      <input type="search" id="siteSearch" placeholder="חיפוש מתכון..." aria-label="חיפוש">
+      <button onclick="doSearch()">🔍</button>
+    </div>
+  </div>
+</header>
+
+<div id="recipeHero"></div>
+
+<div class="ad-slot" aria-label="פרסומת"></div>
+
+<div id="recipeContent"></div>
+
+<div class="ad-slot ad-slot--mid" aria-label="פרסומת"></div>
+
+<section class="newsletter-section">
+  <div class="container">
+    <div class="newsletter-box">
+      <div class="newsletter-text">
+        <h2>קבל מתכונים ישירות למייל</h2>
+        <p>הרשם לניוזלטר ותקבל מתכונים חדשים, טיפים וסודות מהמטבח</p>
+      </div>
+      <form class="newsletter-form" id="newsletterForm" onsubmit="subscribeNewsletter(event)">
+        <input type="email" name="email" placeholder="כתובת המייל שלך" required>
+        <button type="submit" class="btn-primary">הרשם</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="logo-chef">Chef</span><span class="logo-book">Book</span>
+        <p>מתכונים מקוריים, המלצות וטיפים מהמטבח</p>
+      </div>
+      <div class="footer-links">
+        <h3>קטגוריות</h3>
+        <ul>
+          <li><a href="category.html?cat=kinuchim">קינוחים</a></li>
+          <li><a href="category.html?cat=maafim">מאפים</a></li>
+          <li><a href="category.html?cat=basari">בשרי</a></li>
+          <li><a href="category.html?cat=dagim">דגים</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h3>אינפו</h3>
+        <ul>
+          <li><a href="about.html">אודות</a></li>
+          <li><a href="contact.html">יצירת קשר</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom"><p>© 2025 Chef Book – שף בוק</p></div>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

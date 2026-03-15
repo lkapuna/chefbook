@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="אודות שף בוק – הסיפור מאחורי הבלוג, השף לירוי ומה שמניע אותנו לבשל ולשתף">
+  <meta name="robots" content="index, follow">
+  <title>אודות – Chef Book שף בוק</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;700;900&family=Assistant:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .about-hero {
+      background: var(--black);
+      padding: 4rem 0;
+      text-align: center;
+      color: var(--white);
+    }
+    .about-hero h1 { color: var(--white); }
+    .about-hero p { color: var(--gray-400); margin-top: 0.75rem; font-size: 1.1rem; }
+
+    .about-content {
+      max-width: 760px;
+      margin: 3rem auto;
+      padding: 0 1.5rem;
+    }
+    .about-content h2 {
+      font-size: 1.5rem;
+      color: var(--black);
+      margin: 2rem 0 0.75rem;
+      border-right: 4px solid var(--red);
+      padding-right: 0.75rem;
+    }
+    .about-content p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--gray-600);
+      margin-bottom: 1rem;
+    }
+    .about-values {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.25rem;
+      margin: 2rem 0;
+    }
+    .value-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      text-align: center;
+      border: 1px solid var(--gray-200);
+      box-shadow: var(--shadow);
+    }
+    .value-card .icon { font-size: 2rem; margin-bottom: 0.75rem; }
+    .value-card h3 { font-size: 1rem; color: var(--black); margin-bottom: 0.4rem; }
+    .value-card p { font-size: 0.85rem; color: var(--gray-600); margin: 0; }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo-wrap">
+      <a href="index.html" class="logo-link">
+        <span class="logo-chef">Chef</span><span class="logo-book">Book</span>
+        <span class="logo-sub">שף בוק</span>
+      </a>
+    </div>
+    <button class="menu-toggle" id="menuToggle" aria-label="תפריט"><span></span><span></span><span></span></button>
+    <nav class="main-nav" id="mainNav">
+      <ul>
+        <li class="has-sub"><a href="category.html?cat=recipes">מתכונים ▾</a>
+          <ul class="submenu">
+            <li><a href="category.html?cat=kinuchim">קינוחים</a></li>
+            <li><a href="category.html?cat=maafim">מאפים</a></li>
+            <li><a href="category.html?cat=tzimchoni">צמחוני</a></li>
+            <li><a href="category.html?cat=chalavi">חלבי</a></li>
+            <li><a href="category.html?cat=pastot">פסטות</a></li>
+            <li><a href="category.html?cat=basari">בשרי</a></li>
+            <li><a href="category.html?cat=dagim">דגים</a></li>
+            <li><a href="category.html?cat=tosafot">תוספות</a></li>
+          </ul>
+        </li>
+        <li class="has-sub"><a href="category.html?cat=hamlaztot">המלצות ▾</a>
+          <ul class="submenu">
+            <li><a href="category.html?cat=misadot">מסעדות</a></li>
+            <li><a href="category.html?cat=tipim">טיפים</a></li>
+            <li><a href="category.html?cat=mutzarim">מוצרים</a></li>
+          </ul>
+        </li>
+        <li><a href="about.html" class="active">אודות</a></li>
+        <li><a href="contact.html">יצירת קשר</a></li>
+      </ul>
+    </nav>
+    <div class="header-search">
+      <input type="search" id="siteSearch" placeholder="חיפוש מתכון..." aria-label="חיפוש">
+      <button onclick="doSearch()">🔍</button>
+    </div>
+  </div>
+</header>
+
+<section class="about-hero">
+  <div class="container">
+    <h1>אודות שף בוק 👨‍🍳</h1>
+    <p>הסיפור מאחורי הבלוג, המטבח והתשוקה לבישול</p>
+  </div>
+</section>
+
+<div class="about-content">
+  <h2>מי אנחנו?</h2>
+  <p>
+    שף בוק נוסד מתוך אהבה אמיתית לאוכל ולבישול ביתי. אנחנו מאמינים שכל ארוחה טובה מתחילה במתכון ברור, חומרי גלם איכותיים ומעט אהבה.
+  </p>
+  <p>
+    הבלוג נוצר כדי לשתף מתכונים מקוריים, טיפים מקצועיים שאפשר ליישם בקלות בבית, והמלצות על מסעדות ומוצרים שאנחנו מאמינים בהם.
+  </p>
+
+  <h2>מה תמצאו אצלנו</h2>
+
+  <div class="about-values">
+    <div class="value-card">
+      <div class="icon">🍰</div>
+      <h3>קינוחים ומאפים</h3>
+      <p>עוגות, קאפקייקס, עוגיות ומאפים מהמטבח לשלכם</p>
+    </div>
+    <div class="value-card">
+      <div class="icon">🥩</div>
+      <h3>בשרי ודגים</h3>
+      <p>מתכוני בשר ודגים לאירועים מיוחדים וגם לשגרה</p>
+    </div>
+    <div class="value-card">
+      <div class="icon">🍝</div>
+      <h3>פסטות וצמחוני</h3>
+      <p>מנות פסטה איטלקיות ומתכונים צמחוניים מגוונים</p>
+    </div>
+    <div class="value-card">
+      <div class="icon">💡</div>
+      <h3>טיפים וסודות</h3>
+      <p>טריקים מהמטבח שיהפכו כל מנה לרמה אחרת לגמרי</p>
+    </div>
+  </div>
+
+  <h2>הפילוסופיה שלנו</h2>
+  <p>
+    מאמינים שאוכל טוב לא חייב להיות מסובך. כל מתכון שלנו כתוב בצורה ברורה עם הוראות שלב-שלב, כדי שגם מי שזה הפעם הראשונה שלו במטבח יצליח.
+  </p>
+  <p>
+    המתכונים עברו בדיקות חוזרות לפני שהתפרסמו, וכולם נעשו עם חומרי גלם שניתן למצוא בכל סופרמרקט.
+  </p>
+
+  <h2>צרו קשר</h2>
+  <p>
+    שאלות? הצעות? רוצים לשתף תמונה של מתכון שעשיתם? <a href="contact.html" style="color:var(--red);font-weight:600">כתבו לנו</a> – נשמח לשמוע מכם!
+  </p>
+</div>
+
+<section class="newsletter-section">
+  <div class="container">
+    <div class="newsletter-box">
+      <div class="newsletter-text">
+        <h2>קבל מתכונים ישירות למייל</h2>
+        <p>הרשם לניוזלטר ותקבל מתכונים חדשים, טיפים וסודות מהמטבח</p>
+      </div>
+      <form class="newsletter-form" id="newsletterForm" onsubmit="subscribeNewsletter(event)">
+        <input type="email" name="email" placeholder="כתובת המייל שלך" required>
+        <button type="submit" class="btn-primary">הרשם</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="logo-chef">Chef</span><span class="logo-book">Book</span>
+        <p>מתכונים מקוריים, המלצות וטיפים מהמטבח</p>
+      </div>
+      <div class="footer-links">
+        <h3>קטגוריות</h3>
+        <ul>
+          <li><a href="category.html?cat=kinuchim">קינוחים</a></li>
+          <li><a href="category.html?cat=maafim">מאפים</a></li>
+          <li><a href="category.html?cat=basari">בשרי</a></li>
+          <li><a href="category.html?cat=dagim">דגים</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h3>אינפו</h3>
+        <ul>
+          <li><a href="about.html">אודות</a></li>
+          <li><a href="contact.html">יצירת קשר</a></li>
+          <li><a href="privacy.html">פרטיות</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom"><p>© 2025 Chef Book – שף בוק | כל הזכויות שמורות</p></div>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
