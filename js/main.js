@@ -365,21 +365,28 @@ function loadVideoScripts(recipe) {
 
 // ---- SHARE RECIPE ----
 function shareRecipe(platform) {
-  const url = window.location.href;
-  const title = document.title.replace(' – שף בוק', '');
-  
+  // Build clean URL: base + slug only (no Hebrew encoding)
+  const slug = new URLSearchParams(location.search).get('slug') || '';
+  const base = location.origin + location.pathname.replace(/[^/]*$/, '');
+  const cleanUrl = base + 'recipe.html?slug=' + slug;
+  const title = document.title.replace(' – שף בוק', '').trim();
+
   if (platform === 'whatsapp') {
-    window.open(`https://wa.me/?text=${encodeURIComponent(title + ' ' + url)}`, '_blank');
+    const text = title + '\n' + cleanUrl;
+    window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
   } else if (platform === 'facebook') {
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank', 'width=600,height=400');
+    window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(cleanUrl), '_blank', 'width=600,height=400');
   } else if (platform === 'copy') {
-    navigator.clipboard.writeText(url).then(() => {
+    navigator.clipboard.writeText(cleanUrl).then(() => {
       const btn = document.getElementById('copyShareBtn');
       const orig = btn.innerHTML;
       btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> הועתק!';
       btn.style.background = '#2ed573';
       btn.style.color = 'white';
       setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; btn.style.color = ''; }, 2500);
+    }).catch(() => {
+      // Fallback for browsers without clipboard API
+      prompt('קישור לשיתוף:', cleanUrl);
     });
   }
 }

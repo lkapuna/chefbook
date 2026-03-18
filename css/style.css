@@ -16,13 +16,13 @@
   --white:        #ffffff;
   --cream:        #fffdf8;
   --warm-50:      #ffffff;
-  --warm-100:     #fff8ee;
-  --warm-200:     #ffefd8;
-  --warm-300:     #ffd9a8;
+  --warm-100:     #f9f9f9;
+  --warm-200:     #f0f0f0;
+  --warm-300:     #e0e0e0;
   --text-dark:    #1e0f00;
   --text-mid:     #4a2e10;
   --text-light:   #906040;
-  --border:       #f0dfc0;
+  --border:       #ebebeb;
   --header-bg:    #1e0f00;
   --font-display: 'Frank Ruhl Libre', serif;
   --font-body:    'Assistant', sans-serif;
@@ -46,7 +46,7 @@ html { scroll-behavior: smooth; font-size: 16px; }
 
 body {
   font-family: var(--font-body);
-  background: var(--cream);
+  background: var(--white);
   color: var(--text-dark);
   line-height: 1.7;
   direction: rtl;
@@ -312,7 +312,7 @@ h3 { font-size: clamp(1rem, 2vw, 1.35rem); }
    =========================== */
 .hero {
   position: relative;
-  min-height: 68vh;
+  min-height: 42vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -358,13 +358,19 @@ h3 { font-size: clamp(1rem, 2vw, 1.35rem); }
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
-  padding: 3rem 1.5rem;
+  gap: 1.5rem;
+  padding: 2.5rem 1.5rem;
 }
 .hero-logo-img {
-  width: min(520px, 85vw);
+  width: min(400px, 78vw);
   height: auto;
-  filter: drop-shadow(0 4px 24px rgba(0,0,0,0.55));
+  /* Soft white frosted background so logo is always readable */
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-radius: 18px;
+  padding: 0.75rem 1.25rem;
+  box-shadow: 0 2px 24px rgba(255,255,255,0.15), 0 0 0 1px rgba(255,255,255,0.12);
   animation: logoPop 0.7s ease both;
 }
 @keyframes logoPop {
@@ -497,7 +503,7 @@ h3 { font-size: clamp(1rem, 2vw, 1.35rem); }
    =========================== */
 .latest-recipes {
   padding: 4rem 0;
-  background: var(--cream);
+  background: var(--white);
 }
 .recipes-grid {
   display: grid;
@@ -1102,4 +1108,37 @@ h3 { font-size: clamp(1rem, 2vw, 1.35rem); }
 .categories-strip::before {
   background: linear-gradient(90deg, #ff7a1a, #ffd93d, #ff7a1a) !important;
   height: 4px !important;
+}
+
+
+/* ===========================
+   MOBILE HERO HEIGHT
+   =========================== */
+@media (max-width: 600px) {
+  .hero { min-height: 38vh !important; max-height: 55vh; }
+  .hero-logo-img { width: min(280px, 80vw) !important; }
+  .hero-logo-wrap { padding: 1.5rem 1rem !important; gap: 1rem !important; }
+  .hero-cta { font-size: 0.9rem !important; padding: 0.7rem 1.6rem !important; }
+}
+@media (min-width: 601px) and (max-width: 900px) {
+  .hero { min-height: 44vh !important; }
+}
+
+/* ===========================
+   PURE WHITE BACKGROUNDS
+   =========================== */
+body { background: #ffffff !important; }
+.latest-recipes { background: #f7f7f7 !important; }
+.categories-strip { background: #ffffff !important; }
+.admin-main { background: #f5f5f5 !important; }
+.recipe-card { background: #ffffff !important; }
+.recipe-ingredients, .recipe-steps, .recipe-body-full, .recipe-video-wrap { background: #ffffff !important; border-color: #ebebeb !important; }
+.admin-card { background: #ffffff !important; border-color: #ebebeb !important; }
+
+/* Lighter card shadows */
+.recipe-card {
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04) !important;
+}
+.recipe-card:hover {
+  box-shadow: 0 10px 32px rgba(255,122,26,0.15), 0 2px 8px rgba(0,0,0,0.06) !important;
 }
