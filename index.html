@@ -69,13 +69,27 @@
   </div>
 </header>
 
-<!-- HERO -->
+<!-- HERO SLIDESHOW -->
 <section class="hero">
-  <div class="hero-bg"></div>
+  <div class="hero-slides" id="heroSlides">
+    <div class="hero-slide active" style="background-image:url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1400&q=80')"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=1400&q=80')"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=1400&q=80')"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=1400&q=80')"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=1400&q=80')"></div>
+  </div>
+  <div class="hero-overlay"></div>
   <div class="hero-content">
     <h1>מתכונים שיוצאים <em>מהלב</em></h1>
     <p>טיפים, סודות ומתכונים מקוריים מהמטבח של שף בוק</p>
     <a href="category.html?cat=recipes" class="btn-primary">לכל המתכונים</a>
+  </div>
+  <div class="hero-dots" id="heroDots">
+    <span class="hero-dot active" onclick="goToSlide(0)"></span>
+    <span class="hero-dot" onclick="goToSlide(1)"></span>
+    <span class="hero-dot" onclick="goToSlide(2)"></span>
+    <span class="hero-dot" onclick="goToSlide(3)"></span>
+    <span class="hero-dot" onclick="goToSlide(4)"></span>
   </div>
 </section>
 
@@ -200,6 +214,27 @@
   </div>
 </footer>
 
+
+<script>
+// Hero slideshow
+let currentSlide = 0;
+const slides = document.querySelectorAll('.hero-slide');
+const dots = document.querySelectorAll('.hero-dot');
+
+function goToSlide(n) {
+  slides[currentSlide].classList.remove('active');
+  dots[currentSlide].classList.remove('active');
+  currentSlide = n;
+  slides[currentSlide].classList.add('active');
+  dots[currentSlide].classList.add('active');
+}
+
+function nextSlide() {
+  goToSlide((currentSlide + 1) % slides.length);
+}
+
+setInterval(nextSlide, 3000);
+</script>
 <script src="js/data.js"></script>
 <script src="js/main.js"></script>
 </body>
