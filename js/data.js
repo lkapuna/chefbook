@@ -3,17 +3,17 @@
 // 62 recipes with full content
 
 const CATEGORIES = {
-  kinuchim:  { label: 'קינוחים',  emoji: '🍰', parent: 'recipes' },
-  maafim:    { label: 'מאפים',   emoji: '🥐', parent: 'recipes' },
-  basari:    { label: 'בשרי',    emoji: '🥩', parent: 'recipes' },
-  dagim:     { label: 'דגים',    emoji: '🐟', parent: 'recipes' },
-  pastot:    { label: 'פסטות',   emoji: '🍝', parent: 'recipes' },
-  tzimchoni: { label: 'צמחוני',  emoji: '🥗', parent: 'recipes' },
-  chalavi:   { label: 'חלבי',    emoji: '🧀', parent: 'recipes' },
-  tosafot:   { label: 'תוספות',  emoji: '🥔', parent: 'recipes' },
+  kinuchim:  { label: 'קינוחים',  emoji: '🎂', parent: 'recipes' },
+  maafim:    { label: 'מאפים',   emoji: '🫓', parent: 'recipes' },
+  basari:    { label: 'בשרי',    emoji: '🍖', parent: 'recipes' },
+  dagim:     { label: 'דגים',    emoji: '🐠', parent: 'recipes' },
+  pastot:    { label: 'פסטות',   emoji: '🍜', parent: 'recipes' },
+  tzimchoni: { label: 'צמחוני',  emoji: '🥦', parent: 'recipes' },
+  chalavi:   { label: 'חלבי',    emoji: '🍳', parent: 'recipes' },
+  tosafot:   { label: 'תוספות',  emoji: '🫘', parent: 'recipes' },
   misadot:   { label: 'מסעדות',  emoji: '🍽️', parent: 'hamlaztot' },
-  tipim:     { label: 'טיפים',   emoji: '💡', parent: 'hamlaztot' },
-  mutzarim:  { label: 'מוצרים',  emoji: '🛒', parent: 'hamlaztot' },
+  tipim:     { label: 'טיפים',   emoji: '👨‍🍳', parent: 'hamlaztot' },
+  mutzarim:  { label: 'מוצרים',  emoji: '🛍️', parent: 'hamlaztot' },
   hamlaztot: { label: 'המלצות',  emoji: '⭐', parent: null },
 };
 

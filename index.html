@@ -72,24 +72,29 @@
 <!-- HERO SLIDESHOW -->
 <section class="hero">
   <div class="hero-slides" id="heroSlides">
-    <div class="hero-slide active" style="background-image:url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1400&q=80')"></div>
-    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=1400&q=80')"></div>
-    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=1400&q=80')"></div>
-    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=1400&q=80')"></div>
-    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=1400&q=80')"></div>
+    <!-- Colorful, bright, cheerful food photos -->
+    <div class="hero-slide active" style="background-image:url('https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1400&q=85')"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=1400&q=85')"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=1400&q=85')"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=1400&q=85')"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=1400&q=85')"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1482049016688-2d3e1b311543?w=1400&q=85')"></div>
   </div>
   <div class="hero-overlay"></div>
-  <div class="hero-content">
-    <h1>מתכונים שיוצאים <em>מהלב</em></h1>
-    <p>טיפים, סודות ומתכונים מקוריים מהמטבח של שף בוק</p>
-    <a href="category.html?cat=recipes" class="btn-primary">לכל המתכונים</a>
+
+  <!-- Logo centered in foreground -->
+  <div class="hero-logo-wrap">
+    <img src="images/logo-hero.png" alt="Chef Book – בלוג מתכונים, המלצות וטיפים" class="hero-logo-img">
+    <a href="category.html?cat=recipes" class="btn-primary hero-cta">לכל המתכונים &larr;</a>
   </div>
+
   <div class="hero-dots" id="heroDots">
     <span class="hero-dot active" onclick="goToSlide(0)"></span>
     <span class="hero-dot" onclick="goToSlide(1)"></span>
     <span class="hero-dot" onclick="goToSlide(2)"></span>
     <span class="hero-dot" onclick="goToSlide(3)"></span>
     <span class="hero-dot" onclick="goToSlide(4)"></span>
+    <span class="hero-dot" onclick="goToSlide(5)"></span>
   </div>
 </section>
 
@@ -101,35 +106,35 @@
   <div class="container">
     <div class="cat-grid">
       <a href="category.html?cat=kinuchim" class="cat-card">
-        <span class="cat-emoji">🍰</span>
+        <span class="cat-emoji">🎂</span>
         <span>קינוחים</span>
       </a>
       <a href="category.html?cat=maafim" class="cat-card">
-        <span class="cat-emoji">🥐</span>
+        <span class="cat-emoji">🫓</span>
         <span>מאפים</span>
       </a>
       <a href="category.html?cat=basari" class="cat-card">
-        <span class="cat-emoji">🥩</span>
+        <span class="cat-emoji">🍖</span>
         <span>בשרי</span>
       </a>
       <a href="category.html?cat=dagim" class="cat-card">
-        <span class="cat-emoji">🐟</span>
+        <span class="cat-emoji">🐠</span>
         <span>דגים</span>
       </a>
       <a href="category.html?cat=pastot" class="cat-card">
-        <span class="cat-emoji">🍝</span>
+        <span class="cat-emoji">🍜</span>
         <span>פסטות</span>
       </a>
       <a href="category.html?cat=tzimchoni" class="cat-card">
-        <span class="cat-emoji">🥗</span>
+        <span class="cat-emoji">🥦</span>
         <span>צמחוני</span>
       </a>
       <a href="category.html?cat=chalavi" class="cat-card">
-        <span class="cat-emoji">🧀</span>
+        <span class="cat-emoji">🍳</span>
         <span>חלבי</span>
       </a>
       <a href="category.html?cat=tosafot" class="cat-card">
-        <span class="cat-emoji">🥔</span>
+        <span class="cat-emoji">🫘</span>
         <span>תוספות</span>
       </a>
     </div>
@@ -222,18 +227,16 @@ const slides = document.querySelectorAll('.hero-slide');
 const dots = document.querySelectorAll('.hero-dot');
 
 function goToSlide(n) {
+  if (!slides.length) return;
   slides[currentSlide].classList.remove('active');
-  dots[currentSlide].classList.remove('active');
-  currentSlide = n;
+  if (dots[currentSlide]) dots[currentSlide].classList.remove('active');
+  currentSlide = (n + slides.length) % slides.length;
   slides[currentSlide].classList.add('active');
-  dots[currentSlide].classList.add('active');
+  if (dots[currentSlide]) dots[currentSlide].classList.add('active');
 }
 
-function nextSlide() {
-  goToSlide((currentSlide + 1) % slides.length);
-}
-
-setInterval(nextSlide, 3000);
+function nextSlide() { goToSlide(currentSlide + 1); }
+setInterval(nextSlide, 3500);
 </script>
 <script src="js/data.js"></script>
 <script src="js/main.js"></script>
