@@ -174,17 +174,12 @@ function renderRecipePage() {
         </div>`;
 
     } else if (recipe.body_html) {
-      // Strip duplicate intro: remove opening h2 (title) and first paragraph (excerpt)
+      // Strip duplicate intro: remove opening h2 (title) and first 1-3 paragraphs
       let cleanBody = recipe.body_html;
-      // Remove first h2 tag (repeats the title)
-      cleanBody = cleanBody.replace(/^\s*<h2[^>]*>[\s\S]*?<\/h2>\s*/i, '');
-      // Remove first 1-2 <p> blocks if they repeat the excerpt
-      const excerptSnip = (recipe.excerpt || '').trim().slice(0, 40).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
-      if (excerptSnip) {
-        cleanBody = cleanBody.replace(new RegExp('<p[^>]*>[^<]*' + excerptSnip + '[\\s\\S]*?<\/p>\\s*', 'i'), '');
-      }
-      // Remove any remaining short leading <p> that just restates the title/excerpt
-      cleanBody = cleanBody.replace(/^(\s*<p[^>]*>[^<]{0,150}<\/p>\s*){0,2}/, '');
+      // Remove ALL leading h2 tags (title repeats)
+      cleanBody = cleanBody.replace(/^(\s*<h2[^>]*>[\s\S]*?<\/h2>\s*)+/i, '');
+      // Remove first 1-3 <p> blocks (they repeat excerpt/intro already shown in hero)
+      cleanBody = cleanBody.replace(/^(\s*<p[^>]*>[\s\S]*?<\/p>\s*){1,3}/, '');
       cleanBody = cleanBody.trim();
       if (cleanBody) {
         contentHTML = `<div class="recipe-body-full" itemprop="recipeInstructions">${cleanBody}</div>`;
